@@ -1,0 +1,14 @@
+# Credentials & secrets — NE JAMAIS COMMITER
+config.json
+*.session
+*.session-journal
+
+# Exports de données (messages personnels)
+exports/
+
+# Python
+__pycache__/
+*.pyc
+*.pyo
+venv/
+.venv/
