@@ -1,166 +1,166 @@
 # 📱 Telegram Scraper
 
-Scrape tous les messages de tes groupes, canaux et conversations privées sur Telegram.
+Scrape all messages from your Telegram groups, channels, and private conversations.
 
-## Comment ça marche
+## How it works
 
-Ce script utilise **[Telethon](https://github.com/LonamiWebs/Telethon)**, une librairie Python qui se connecte à ton **compte Telegram personnel** via l'API MTProto. Ce n'est **pas un bot** — c'est ton compte qui se connecte directement, comme si tu ouvrais Telegram sur un nouvel appareil.
+This script uses **[Telethon](https://github.com/LonamiWebs/Telethon)**, a Python library that connects to your **personal Telegram account** via the MTProto API. This is **not a bot** — it's your own account connecting directly, as if you were opening Telegram on a new device.
 
-### Ce que le script fait :
+### What the script does:
 
-1. Se connecte à ton compte Telegram (authentification par numéro + code OTP)
-2. Liste **tous tes dialogs** (groupes, canaux, messages privés)
-3. Scrape les messages de chaque dialog
-4. Exporte tout en JSON, CSV ou Markdown
+1. Connects to your Telegram account (phone number + OTP authentication)
+2. Lists **all your dialogs** (groups, channels, private messages)
+3. Scrapes messages from each dialog
+4. Exports everything as JSON, CSV, or Markdown
 
-### Ce que le script ne fait PAS :
+### What the script does NOT do:
 
-- ❌ N'envoie aucun message
-- ❌ Ne modifie aucun groupe/contact
-- ❌ Ne supprime rien
-- ✅ Lecture seule
+- ❌ Sends no messages
+- ❌ Modifies no groups/contacts
+- ❌ Deletes nothing
+- ✅ Read-only
 
 ---
 
 ## 🚀 Installation
 
-### Prérequis
+### Prerequisites
 
 - Python 3.10+
-- Un compte Telegram
-- Les API credentials de Telegram (gratuit)
+- A Telegram account
+- Telegram API credentials (free)
 
-### 1. Obtenir les API credentials Telegram
+### 1. Get Telegram API credentials
 
-1. Va sur **[my.telegram.org](https://my.telegram.org)**
-2. Connecte-toi avec ton numéro de téléphone Telegram
-3. Clique sur **"API development tools"**
-4. Remplis le formulaire :
-   - **App title** : ce que tu veux (ex: `my_scraper`)
-   - **Short name** : un nom court (ex: `myscr`)
-   - **Platform** : `Other`
-   - **Description** : `Personal scraper`
-5. Clique sur **"Create application"**
-6. Note le **`api_id`** (nombre) et **`api_hash`** (chaîne hex)
+1. Go to **[my.telegram.org](https://my.telegram.org)**
+2. Log in with your Telegram phone number
+3. Click on **"API development tools"**
+4. Fill out the form:
+   - **App title**: whatever you want (e.g., `my_scraper`)
+   - **Short name**: a short name (e.g., `myscr`)
+   - **Platform**: `Other`
+   - **Description**: `Personal scraper`
+5. Click **"Create application"**
+6. Note the **`api_id`** (number) and **`api_hash`** (hex string)
 
-### 2. Installer les dépendances
+### 2. Install dependencies
 
 ```bash
 pip install telethon
 ```
 
-### 3. Configurer
+### 3. Configure
 
-Deux options (choisis-en une) :
+Two options (pick one):
 
-**Option A — Fichier `config.json` (recommandé)**
+**Option A — `config.json` file (recommended)**
 
 ```bash
 cp config.example.json config.json
 ```
 
-Puis édite `config.json` avec tes vraies valeurs :
+Then edit `config.json` with your actual values:
 
 ```json
 {
   "api_id": 12345678,
-  "api_hash": "votre_api_hash_ici"
+  "api_hash": "your_api_hash_here"
 }
 ```
 
-**Option B — Variables d'environnement**
+**Option B — Environment variables**
 
 ```bash
 export TG_API_ID=12345678
-export TG_API_HASH=votre_api_hash_ici
+export TG_API_HASH=your_api_hash_here
 ```
 
-### 4. Première exécution (authentification)
+### 4. First run (authentication)
 
 ```bash
 python3 telegram_scraper.py
 ```
 
-Le script va te demander :
-1. **Ton numéro de téléphone** (avec indicatif pays, ex: `+33612345678`)
-2. **Le code OTP** que Telegram t'envoie dans l'app Telegram ou par SMS
-3. (Si activé) Ton **mot de passe 2FA** Telegram
+The script will prompt you for:
+1. **Your phone number** (with country code, e.g., `+33612345678`)
+2. **The OTP code** that Telegram sends you through the Telegram app or via SMS
+3. (If enabled) Your **Telegram 2FA password**
 
-> ⚠️ **La première exécution crée un fichier `session`** qui sauvegarde l'authentification. Les exécutions suivantes n'auront plus besoin de s'authentifier.
+> ⚠️ **The first run creates a `session` file** that saves the authentication. Subsequent runs won't require re-authentication.
 
-### 5. Exécutions suivantes
+### 5. Subsequent runs
 
 ```bash
 python3 telegram_scraper.py
-# → Directement connecté, pas de re-auth
+# → Connects directly, no re-auth
 ```
 
 ---
 
-## 📖 Utilisation
+## 📖 Usage
 
-### Basique
+### Basic
 
 ```bash
-# Scrape 50 derniers messages de chaque dialog
+# Scrape the last 50 messages from each dialog
 python3 telegram_scraper.py --limit 50
 
-# Scrape 500 messages par dialog (défaut)
+# Scrape 500 messages per dialog (default)
 python3 telegram_scraper.py
 
-# Scrape TOUT l'historique (⚠️ peut être TRÈS long)
+# Scrape the ENTIRE history (⚠️ can be VERY long)
 python3 telegram_scraper.py --limit 0
 ```
 
-### Filtrer par type
+### Filter by type
 
 ```bash
-# Seulement les groupes
+# Groups only
 python3 telegram_scraper.py --types groups
 
-# Seulement les canaux
+# Channels only
 python3 telegram_scraper.py --types channels
 
-# Seulement les conversations privées
+# Private conversations only
 python3 telegram_scraper.py --types private
 ```
 
-### Formats d'export
+### Export formats
 
 ```bash
-# JSON (défaut) — le plus complet
+# JSON (default) — most complete
 python3 telegram_scraper.py --format json
 
-# CSV — compatible Excel / Google Sheets
+# CSV — compatible with Excel / Google Sheets
 python3 telegram_scraper.py --format csv
 
-# Markdown — lisible directement
+# Markdown — human-readable
 python3 telegram_scraper.py --format markdown
 ```
 
-### Répertoire de sortie
+### Output directory
 
 ```bash
-# Par défaut: ./exports/
-python3 telegram_scraper.py --output /chemin/vers/dossier
+# Default: ./exports/
+python3 telegram_scraper.py --output /path/to/folder
 ```
 
 ---
 
-## 📁 Structure de sortie
+## 📁 Output structure
 
 ```
 exports/
-├── telegram_export_20260415_035253.json    # Messages complets avec metadata
-├── telegram_summary_20260415_035253.json   # Vue d'ensemble (nb dialogs, messages)
+├── telegram_export_20260415_035253.json    # Full messages with metadata
+├── telegram_summary_20260415_035253.json   # Overview (dialog count, message count)
 ```
 
-### Format JSON (export complet)
+### JSON format (full export)
 
 ```json
 [
   {
-    "name": "Nom du groupe",
+    "name": "Group name",
     "type": "group",
     "id": 123456789,
     "message_count_scraped": 50,
@@ -170,8 +170,8 @@ exports/
         "id": 123,
         "date": "2026-04-14T18:30:00+00:00",
         "sender_id": 987654321,
-        "sender_name": "Jean Dupont",
-        "text": "Contenu du message",
+        "sender_name": "John Doe",
+        "text": "Message content",
         "reply_to": null,
         "media_type": null,
         "forward": false
@@ -181,7 +181,7 @@ exports/
 ]
 ```
 
-### Format JSON (résumé)
+### JSON format (summary)
 
 ```json
 {
@@ -191,70 +191,70 @@ exports/
   "format": "json",
   "output_file": "exports/telegram_export_20260415_035253.json",
   "dialogs": [
-    { "name": "Nom du groupe", "type": "group", "id": 123, "messages_scraped": 50, "members": 3390 }
+    { "name": "Group name", "type": "group", "id": 123, "messages_scraped": 50, "members": 3390 }
   ]
 }
 ```
 
 ---
 
-## 🔐 Sécurité
+## 🔐 Security
 
-### Fichiers sensibles (déjà dans `.gitignore`)
+### Sensitive files (already in `.gitignore`)
 
-| Fichier | Contenu | Risque |
-|---------|---------|--------|
-| `config.json` | api_id + api_hash | 🟡 Modéré — permet de créer des apps |
-| `session` | Token d'auth Telegram | 🔴 **Élevé** — accès complet au compte |
-| `exports/` | Messages personnels | 🔴 **Élevé** — données privées |
+| File | Content | Risk |
+|------|---------|------|
+| `config.json` | api_id + api_hash | 🟡 Moderate — allows creating apps |
+| `session` | Telegram auth token | 🔴 **High** — full account access |
+| `exports/` | Personal messages | 🔴 **High** — private data |
 
-### Bonnes pratiques
+### Best practices
 
-- ✅ **Ne jamais commiter** `config.json`, `session`, ou `exports/`
-- ✅ Le repo `.gitignore` est déjà configuré pour les exclure
-- ✅ Tu peux révoquer l'accès à tout moment dans Telegram :
-  - Paramètres → Appareils actifs → déconnecte le serveur
-- ✅ Pour supprimer la session : `rm session`
+- ✅ **Never commit** `config.json`, `session`, or `exports/`
+- ✅ The repo's `.gitignore` is already configured to exclude them
+- ✅ You can revoke access at any time in Telegram:
+  - Settings → Active devices → disconnect the server
+- ✅ To delete the session: `rm session`
 
 ---
 
-## 🔧 Automatisation (cron)
+## 🔧 Automation (cron)
 
-Tu peux lancer le scraper régulièrement avec cron :
+You can run the scraper on a schedule with cron:
 
 ```bash
-# Toutes les 6 heures — scraper les 100 derniers messages
-0 */6 * * * cd /chemin/vers/repo && python3 telegram_scraper.py --limit 100 --output /chemin/vers/exports >> /var/log/tg-scraper.log 2>&1
+# Every 6 hours — scrape the last 100 messages
+0 */6 * * * cd /path/to/repo && python3 telegram_scraper.py --limit 100 --output /path/to/exports >> /var/log/tg-scraper.log 2>&1
 ```
 
-Ou avec **systemd timer** pour plus de contrôle.
+Or use a **systemd timer** for more control.
 
 ---
 
-## 🐛 Dépannage
+## 🐛 Troubleshooting
 
 ### "Please enter your phone (or bot token):"
-→ Première exécution, normal. Entre ton numéro avec l'indicatif pays.
+→ First run, this is normal. Enter your phone number with country code.
 
 ### "The code entered is invalid"
-→ Le code OTP a expiré ou est incorrect. Relance le script pour en obtenir un nouveau.
+→ The OTP code has expired or is incorrect. Rerun the script to get a new one.
 
 ### "Two-step verification is enabled"
-→ Telegram te demande ton mot de passe 2FA. Entre-le quand le script le demande.
+→ Telegram is asking for your 2FA password. Enter it when the script prompts you.
 
-### "Chat not found" ou "Channel not found"
-→ Le groupe/canal a peut-être été supprimé ou tu en as été banni.
+### "Chat not found" or "Channel not found"
+→ The group/channel may have been deleted or you were banned from it.
 
 ### "FloodWaitError: A wait of X seconds is required"
-→ Telegram limite les requêtes. Le script attendra automatiquement, ou relance plus tard.
+→ Telegram is rate-limiting requests. The script will wait automatically, or rerun later.
 
 ---
 
-## 📦 Dépendances
+## 📦 Dependencies
 
-- **[Telethon](https://github.com/LonamiWebs/Telethon)** — Client Telegram MTProto pour Python
-- Python 3.10+ (pour le support natif des type hints)
+- **[Telethon](https://github.com/LonamiWebs/Telethon)** — Telegram MTProto client for Python
+- Python 3.10+ (for native type hint support)
 
-## 📝 Licence
+## 📝 License
 
-Usage personnel. Fais-en ce que tu veux.
+Personal use. Do whatever you want with it.
